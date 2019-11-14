@@ -1,5 +1,6 @@
 const { body, validationResult } = require('express-validator/check');
 const { sanitizeBody } = require('express-validator/filter');
+const { timeSeries } = require('../data/alpha_vars');
 const https = require('https');
 require('dotenv').config();
 
@@ -19,11 +20,12 @@ exports.index = function(req, res, next) {
 		return {key: key, name: data[key]};
 	});
 
-	res.render('layout', {title: 'Stock Data', stocks: stocks});
+	res.render('layout', {title: 'Stock Data', stocks: stocks, timeSeries: timeSeries});
 };
 
 exports.getStock = function(req, res, next) {
 	let func = 'TIME_SERIES_INTRADAY';
+	console.log('timeseries = ' + req.query.timeseries);
 	let interval = '5min';
 	let outputsize = 'compact';
 	let symbol = req.query.stock;

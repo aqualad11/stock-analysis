@@ -28,6 +28,13 @@ html
 							- stocks.sort(function(a,b) {let textA = a.key; let textB = b.key; return (textA < textB) ? -1 :  (textA > textB) ? 1 : 0; })
 							for stock in stocks
 								option(value=stock.key) #{stock.name}
+					div.form-group
+						label(for='timeseries') Time Series:
+						select#timeseries.form-control(type='select', placeholder='Select Time Series', name='timeseries' required='true')
+							each val, key in timeSeries
+								option(value=key) #{val}
+
+
 					button.btn.btn-primary(type='submit') Submit
 				ul(class='list-unstyled components')
 					p Dummy Heading
