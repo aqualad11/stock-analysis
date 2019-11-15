@@ -22,6 +22,16 @@ html
 				div(class='sidebar-header')
 					h3 Stock Analysis
 				form(method='GET' action='/stocks/getStock')
+					div.form-group(id='search')
+						label(for="search-input") Search:
+						input#search.form-control(type='search' placeholder='Search Stock' aria-label='Search')
+						if results
+							ul(class='list-group')
+								li(class='list-group-item') hello
+								li(class='list-group-item') world
+							//ul(class='list-group')
+								//for result in result
+									//li(class='list-group-item') result
 					div.form-group
 						label(for='stock') Stock:
 						select#stock.form-control(type='select', placeholder='Select Stock' name='stock' required='true')
@@ -82,3 +92,7 @@ html
 		script(src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous")
 		// Script to collapse sidebar
 		script(src='../javascripts/sidebar_collapse.js')
+		// Script for search bar
+		script(src='../javascripts/searchbar.js')
+		// Axios
+		script(src='https://unpkg.com/axios/dist/axios.min.js')

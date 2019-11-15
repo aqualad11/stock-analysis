@@ -8,6 +8,3 @@ exports.timeSeries = {
 	TIME_SERIES_MONTHLY_ADJUSTED: 'Monthly Adjusted'
 }
 
-exports.interval = {
-	
-}

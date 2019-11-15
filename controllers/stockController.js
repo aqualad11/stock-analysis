@@ -20,7 +20,7 @@ exports.index = function(req, res, next) {
 		return {key: key, name: data[key]};
 	});
 
-	res.render('layout', {title: 'Stock Data', stocks: stocks, timeSeries: timeSeries});
+	res.render('layout', {title: 'Stock Data', stocks: stocks, timeSeries: timeSeries, results: ''});
 };
 
 exports.getStock = function(req, res, next) {
@@ -51,3 +51,8 @@ exports.getStock = function(req, res, next) {
 	});
 
 };
+
+exports.searchStock = function(req, res, next) {
+	console.log('made it to the back fam');
+	console.log(req.body.input);
+}

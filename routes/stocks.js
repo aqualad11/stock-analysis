@@ -8,5 +8,7 @@ router.get('/', stockController.index);
 
 router.get('/getStock', stockController.getStock);
 
+router.post('/searchStock', stockController.searchStock)
+
 
 module.exports = router;
