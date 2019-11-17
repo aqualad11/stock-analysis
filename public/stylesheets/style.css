@@ -36,6 +36,10 @@ a[data-toggle="collapse"] {
     transform: translateY(-50%);
 }
 
+.list-group-item {
+    color: black;
+}
+
 @import "https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700";
 
 

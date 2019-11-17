@@ -1,15 +1,54 @@
-const searchInput = document.querySelector('#search input');
+// Searchbar script for searchbar functionality 
 
-var input = '';
 
+const searchInput = document.querySelector('#searchbar input');
+
+// Uses debounce function to wait until user has stopped typign for 600 ms
 searchInput.onkeyup = debounce(function() {
-	// key is a letter
-	console.log("input value = " + searchInput.value);
-	axios.post('stocks/searchStock', {
-		input: searchInput.value
-	});
+  clearSearchResults();
+	// If searchbar is not search for stocks
+  if(searchInput.value.length > 0){
+    axios.post('stocks/searchStock', {
+      input: searchInput.value
+    }).then(function(res) {
+
+      var results = res.data;
+      var searchResults = $('#search-results');
+      for(key in results) {
+        searchResults.append('<div id="' + key + '" onclick="addStock(this.id, this.innerText)"><li class="list-group-item" onload="myFunction()">' + results[key] + '</li></div>');
+      }
+      
+    });
+  }
+	
 	
 }, 600);
+
+// Adds the stock to the list of added stocks
+function addStock(key, value) {
+  let list = $('#added-stocks');
+  
+  // Appends a readonly input which shows the user 
+  list.append('<li readonly class="list-group-item">' + value + '</li>'
+    + '<input type="hidden" value='+key+' name="stocks"></input>');
+
+  clearSearchResults();
+  clearSearchBar();
+}
+
+// Clears the search results under the search bar
+function clearSearchResults() {
+  let results = document.getElementById('search-results');
+
+  while(results.firstChild) {
+    results.removeChild(results.firstChild);
+  }
+}
+
+// Clears the text in the searchbar 
+function clearSearchBar() {
+  searchInput.value = '';
+}
 
 // Credit David Walsh (https://davidwalsh.name/javascript-debounce-function)
 
