@@ -1,87 +1,44 @@
 const { body, validationResult } = require('express-validator/check');
 const { sanitizeBody } = require('express-validator/filter');
-const { timeSeries } = require('../data/alpha_vars');
+const { timeSeries, timeIntervals } = require('../data/alpha_vars');
 const https = require('https');
+const alpha = require('../services/alphaService');
 require('dotenv').config();
 
 
-var fs = require('fs');
-
-const api_url = 'https://www.alphavantage.co/query?';
-const api_key = process.env.ALPHA_KEY;
-
-var stocks = {};
-
-// Extract stock data
-var stock_data = fs.readFileSync('./data/stock_symbols.json');
-var data = JSON.parse(stock_data);
-
+// Website Home
 exports.index = function(req, res, next) {
-	
-
-	// returns a list of stocks with their key and value
-	stocks = Object.keys(data).map(function(key) {
-		return {key: key, name: data[key]};
-	});
-
-	res.render('layout', {title: 'Stock Data', stocks: stocks, timeSeries: timeSeries, results: ''});
+	res.render('layout', {title: 'Stock Data', timeSeries: timeSeries, timeIntervals: timeIntervals });
 };
 
-exports.getStock = function(req, res, next) {
-	let func = 'TIME_SERIES_INTRADAY';
-	let interval = '5min';
+// submits form
+exports.getStock = async function(req, res, next) {
+	let func = req.query.timeseries;
+	let interval = req.query.timeInterval;
 	let outputsize = 'compact';
-	let symbol = req.query.stock;
-	let search = req.query.search;
+	let stocks = req.query.stocks;
 
+	console.log('func = ' + func);
+	console.log('interval = ' + interval);
+	console.log('stocks = ');
+	console.log(typeof(stocks));
 
-	// API url for alphavantage
-	let url = api_url + 'function=' + func + '&symbol=' + symbol + '&interval=' + interval + '&apikey=' + api_url;
-	
-	https.get(url, (resp) => {
-		let resp_data = '';
+	let data = await alpha.getStockData(req.query);
+	console.log('time series:');
+	console.log(timeSeries);
+	console.log('data = ');
+	console.log(data);
 
-		resp.on('data', (d) => {
-			resp_data += d;
-		});
-
-		resp.on('end', function() {
-			let timeseries = 'Time Series (' + interval + ')';
-			let data = JSON.parse(resp_data);
-			//let stock_data = Object.keys(data).map(function(key))
-			//console.log(data[timeseries]);
-		});
-	}).on('error', (e) => {
-		console.error(e);
-	});
+	//res.render('layout', {title: 'Stock Data', timeSeries: timeSeries, timeIntervals: timeIntervals });
 
 };
 
 exports.searchStock = function(req, res, next) {
-	let func = 'SYMBOL_SEARCH';
+	//console.log(sanitizeBody('*').escape());
 	let keywords = req.body.input;
-	let url = api_url + 'function=' + func + '&keywords=' + keywords + '&apikey=' + api_url;
-
-	https.get(url, (resp) => {
-		let resp_data = '';
-
-		resp.on('data', (d) => {
-			resp_data += d;
-		});
-
-		resp.on('end', function() {
-			let bestmatches = 'bestMatches';
-			let symbol = '1. symbol';
-			let name = '2. name';
-			let resp_matches = JSON.parse(resp_data)[bestmatches];
-			let matches = {};
-			for (var i = 0; i < resp_matches.length; i++) {
-				matches[resp_matches[i][symbol]] = resp_matches[i][name];
-			}
-			return res.send(matches);
-		});
-	}).on('error', (e) => {
-		console.log('hit the error');
-		console.log(e);
+	alpha.search(keywords).then((matches) => {
+		console.log('search matches');
+		console.log(matches);
+		res.send(matches);
 	});
 }

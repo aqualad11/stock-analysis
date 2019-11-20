@@ -37,9 +37,27 @@ html
 					div.form-group
 						label(for='timeseries') Time Series:
 						select#timeseries.form-control(type='select', placeholder='Select Time Series', name='timeseries' required='true')
+							option(value="" selected) Select a Timeseries
 							each val, key in timeSeries
 								option(value=key) #{val}
+						script.
+							var timeseries = document.querySelector('#timeseries');
+							timeseries.onchange = function(){
+								var interval = document.getElementById('intervals');
+								if(timeseries.value == 'TIME_SERIES_INTRADAY') {
+									interval.style.display = 'block';
+								} else {
+									interval.style.display = 'none';
+								}
+							};
 
+					div.form-group(id='intervals' style="display:none")
+						label(for='interval') Time Interval:
+						select#timeIntervals.form-control(type='select' name='timeInterval')
+							option(value='' selected) Select a Time Interval
+							each val, key in timeIntervals
+								option(value=key) #{val}
+						
 
 					button.btn.btn-primary(type='submit') Submit
 				

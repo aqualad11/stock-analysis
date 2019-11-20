@@ -8,3 +8,10 @@ exports.timeSeries = {
 	TIME_SERIES_MONTHLY_ADJUSTED: 'Monthly Adjusted'
 }
 
+exports.timeIntervals = {
+	'1min': '1 Minute',
+	'5min': '5 Minutes',
+	'15min': '15 Minutes',
+	'30min': '30 Minutes',
+	'60min': '60 Minutes'
+}
