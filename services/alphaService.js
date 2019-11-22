@@ -42,7 +42,7 @@ exports.getStockData = async function(query) {
 	var stocks_data = [];
 
 	if(query.timeInterval) {
-		return getIntradayData(query.stocks, query.timeInterval);
+		return await getIntradayData(query.stocks, query.timeInterval);
 		
 	} else {
 		return getTimeSeriesData(query.stocks, query.timeseries);
@@ -79,8 +79,10 @@ async function getIntradayData(stocks, interval) {
 	let url = api_url + 'function=' + series + '&interval=' + interval + '&apikey=' + api_key + '&symbol=';
 	let data = [];
 	if(typeof(stocks) == 'string') {
-		let temp = await callapi(url + stocks);
-		return temp;
+		let results = await callAPI(url + stocks);
+		let key = Object.keys(results)[1];
+		data.push(results[key]);
+		return data;
 		/*
 		callapi(url + stocks)
 		.then((results) => {
@@ -96,7 +98,16 @@ async function getIntradayData(stocks, interval) {
 		});*/
 	} else {
 		for(var i = 0; i < stocks.length; i++) {
-			callAPI(url + stocks[i])
+			await callAPI(url + stocks[i])
+			.then((results) => {
+				let key = Object.keys(results)[1];
+				data.push(results[key]);
+				if(i == stocks.length) {
+					return data;
+				}
+			});
+			
+			/*callAPI(url + stocks[i])
 			.then((results) => {
 				let key = Object.keys(results)[1];
 				data.push(results[key]);
@@ -108,7 +119,7 @@ async function getIntradayData(stocks, interval) {
 			})
 			.catch((err) => {
 				// LOG
-			});
+			});*/
 		}
 	}
 }
