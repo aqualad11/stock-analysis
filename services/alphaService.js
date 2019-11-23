@@ -38,16 +38,48 @@ exports.search = function(keywords) {
 	
 }
 
-exports.getStockData = async function(query) {
-	var stocks_data = [];
-
-	if(query.timeInterval) {
-		return await getIntradayData(query.stocks, query.timeInterval);
-		
+exports.getStockData = async function(stocks, timeSeries, timeInterval) {
+	var data = {};	
+	var url = '';
+	// TODO: check for algorithms	
+	// Check if time series is either Intraday, or any of the other
+	if(timeInterval) {
+		url = api_url + 'function=' + timeSeries + '&interval=' + timeInterval + '&apikey=' + api_key + '&symbol=';
 	} else {
-		return getTimeSeriesData(query.stocks, query.timeseries);
-	
+		url = api_url + 'function=' + timeSeries + '&apikey=' + api_key + '&symbol=';
 	}
+	console.log('url: ' + url);
+
+	// Check if more than one stock was passed in
+	if(typeof(stocks) == 'string') {
+		// Extract name and key
+		let stock = stocks.split('_');
+		let symb = stock[0];
+		let name = stock[1].replace(/-/g, ' ');
+		// Get data
+		let results = await callAPI(url + symb);
+		// Remove meta data from results
+		let key = Object.keys(results)[1];
+		let new_key = name +'(' + symb +')';
+		data[new_key] = results[key];
+
+	} else {
+		for(var i = 0; i < stocks.length; i++) {
+			// Extract name and key
+			let stock = stocks[i].split('_');
+			let symb = stock[0];
+			let name = stock[1].replace(/-/g, ' ');
+			// Get data
+			let results = await callAPI(url + symb);
+			// Remove meta data from results
+			let key = Object.keys(results)[1];
+			let new_key = name +'(' + symb +')';
+			data[new_key] = results[key];	
+		}
+	}
+
+	return data;
+
 }
 
 // Returns promise with response from API
@@ -77,71 +109,43 @@ async function callAPI(url) {
 async function getIntradayData(stocks, interval) {
 	let series = 'TIME_SERIES_INTRADAY';
 	let url = api_url + 'function=' + series + '&interval=' + interval + '&apikey=' + api_key + '&symbol=';
-	let data = [];
+	let data = {};
 	if(typeof(stocks) == 'string') {
 		let results = await callAPI(url + stocks);
 		let key = Object.keys(results)[1];
-		data.push(results[key]);
+		data[stocks] = results[key];
 		return data;
-		/*
-		callapi(url + stocks)
-		.then((results) => {
-			let key = Object.keys(results)[1];
-			data.push(results[key]);
-			console.log('intraday 1 stock data');
-			console.log(results);
-			return data;
-		})
-		.catch((err) => {
-			// LOG
-			return '';
-		});*/
+		
 	} else {
 		for(var i = 0; i < stocks.length; i++) {
-			await callAPI(url + stocks[i])
-			.then((results) => {
-				let key = Object.keys(results)[1];
-				data.push(results[key]);
-				if(i == stocks.length) {
-					return data;
-				}
-			});
+			let stock = stocks[i];
+			let results = await callAPI(url + stock);
+			let key = Object.keys(results)[1];
+			data[stock] = results[key];
 			
-			/*callAPI(url + stocks[i])
-			.then((results) => {
-				let key = Object.keys(results)[1];
-				data.push(results[key]);
-				if(i == stocks.length-1) { 
-					console.log('intraday 1 stock data');
-					console.log(results);
-					return data; 
-				}
-			})
-			.catch((err) => {
-				// LOG
-			});*/
 		}
+		return data;
 	}
 }
 
-function getTimeSeriesData(stock, timeseries) {
-	return new Promise((resolve, reject) => {
-		let url = api_url + 'function=' + timeseries + '&symbol=' + stock + '&apikey=' + api_key;
+/*
+function getTimeSeriesData(stocks, timeseries) {
+	let url = api_url + 'function=' + timeseries + '&apikey=' + api_key + '&symbol=';
+	let data = {};
 
-		https.get(url, (resp) => {
-			let resp_data = '';
-
-			resp.on('data', (d) => {
-				resp_data += d;
-			});
-
-			resp.on('end', () => {
-				let data = JSON.parse(resp_data);
-				let key = Object.keys(data)[1];
-				resolve(data[key]);
-			});
-		}).on('error', (err) => {
-			reject(err);
-		});
-	});
-}
+	if(typeof(stocks) == 'string') {
+	//	await callAPI(url + stocks);
+		let key = Object.keys(results)[1];
+		data[stocks] = results[key];
+		return data;
+	} else {
+		for(var i = 0; i < stocks.length; i++) {
+			let stock = stocks[i];
+			let results = await callAPI(url + stock);
+			let key = Object.keys(results)[1];
+			data[stock] = results[key];
+			
+		}
+		return data;
+	}
+}*/

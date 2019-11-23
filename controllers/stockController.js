@@ -13,19 +13,20 @@ exports.index = function(req, res, next) {
 
 // submits form
 exports.getStock = async function(req, res, next) {
-	let func = req.query.timeseries;
+	let func = req.query.timeSeries;
 	let interval = req.query.timeInterval;
-	let outputsize = 'compact';
 	let stocks = req.query.stocks;
 
 	console.log('func = ' + func);
 	console.log('interval = ' + interval);
 	console.log('stocks = ');
 	console.log(typeof(stocks));
+	console.log('query: ');
+	console.log(req.query);
 
-	let data = await alpha.getStockData(req.query);
-	console.log('time series:');
-	console.log(timeSeries);
+	
+
+	let data = await alpha.getStockData(req.query.stocks, req.query.timeSeries, req.query.timeInterval);
 	console.log('data = ');
 	console.log(data);
 

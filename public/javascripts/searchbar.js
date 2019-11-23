@@ -27,10 +27,13 @@ searchInput.onkeyup = debounce(function() {
 // Adds the stock to the list of added stocks
 function addStock(key, value) {
   let list = $('#added-stocks');
+
+  // Make key and value available for backend
+  let name = key + '_' + value.replace(/ /g, '-');
   
   // Appends a readonly input which shows the user 
   list.append('<li readonly class="list-group-item">' + value + '</li>'
-    + '<input type="hidden" value='+key+' name="stocks"></input>');
+    + '<input type="hidden" value=' + name +' name="stocks"></input>');
 
   clearSearchResults();
   clearSearchBar();

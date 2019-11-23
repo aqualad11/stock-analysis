@@ -35,13 +35,13 @@ html
 
 
 					div.form-group
-						label(for='timeseries') Time Series:
-						select#timeseries.form-control(type='select', placeholder='Select Time Series', name='timeseries' required='true')
+						label(for='timeSeries') Time Series:
+						select#timeSeries.form-control(type='select', placeholder='Select Time Series', name='timeSeries' required='true')
 							option(value="" selected) Select a Timeseries
 							each val, key in timeSeries
 								option(value=key) #{val}
 						script.
-							var timeseries = document.querySelector('#timeseries');
+							var timeseries = document.querySelector('#timeSeries');
 							timeseries.onchange = function(){
 								var interval = document.getElementById('intervals');
 								if(timeseries.value == 'TIME_SERIES_INTRADAY') {
