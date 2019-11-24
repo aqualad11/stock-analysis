@@ -3,6 +3,7 @@ const { sanitizeBody } = require('express-validator/filter');
 const { timeSeries, timeIntervals } = require('../data/alpha_vars');
 const https = require('https');
 const alpha = require('../services/alphaService');
+const formatter = require('../services/chartFormatter');
 require('dotenv').config();
 
 
@@ -27,11 +28,16 @@ exports.getStock = async function(req, res, next) {
 	
 
 	let data = await alpha.getStockData(req.query.stocks, req.query.timeSeries, req.query.timeInterval);
-	console.log('data = ');
+	const { labels, dataset } = formatter.lineGraph(data);
+
+	//console.log('data = ');
 	console.log(data);
+	console.log('labels: ');
+	console.log(labels)
+	console.log('dataset: ');
+	console.log(dataset);
 
-	//res.render('layout', {title: 'Stock Data', timeSeries: timeSeries, timeIntervals: timeIntervals });
-
+	res.render('chart', {title: 'Stock Data', data: JSON.stringify(dataset), labels: JSON.stringify(labels), timeSeries: timeSeries, timeIntervals: timeIntervals});
 };
 
 exports.searchStock = function(req, res, next) {

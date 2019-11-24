@@ -15,7 +15,7 @@ searchInput.onkeyup = debounce(function() {
       var results = res.data;
       var searchResults = $('#search-results');
       for(key in results) {
-        searchResults.append('<div id="' + key + '" onclick="addStock(this.id, this.innerText)"><li class="list-group-item" onload="myFunction()">' + results[key] + '</li></div>');
+        searchResults.append('<div id="' + key + '" onclick="addStock(this.id, this.innerText)"><li class="list-group-item">' + results[key] + '</li></div>');
       }
       
     });
@@ -24,16 +24,22 @@ searchInput.onkeyup = debounce(function() {
 	
 }, 600);
 
-// Adds the stock to the list of added stocks
+// Adds the stock to the list of added stocks 
 function addStock(key, value) {
   let list = $('#added-stocks');
+  let li = document.getElementById(value);
 
-  // Make key and value available for backend
-  let name = key + '_' + value.replace(/ /g, '-');
-  
-  // Appends a readonly input which shows the user 
-  list.append('<li readonly class="list-group-item">' + value + '</li>'
-    + '<input type="hidden" value=' + name +' name="stocks"></input>');
+  // Checks to see if the stock already exists in the list.
+  if(li) {
+    alert(value + ' has already been added to the list.');
+  } else {
+    // Make key and value available for backend
+    let name = key + '_' + value.replace(/ /g, '-');
+    
+    // Appends a readonly input which shows the user 
+    list.append('<li readonly id="' + value + '" class="list-group-item">' + value + '</li>'
+      + '<input type="hidden" value=' + name +' name="stocks"></input>');
+  }
 
   clearSearchResults();
   clearSearchBar();

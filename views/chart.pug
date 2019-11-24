@@ -1,0 +1,33 @@
+extends layout
+
+block vars
+	- var title = title;
+	- var timeSeries = timeSeries;
+	- var timeIntervals = timeIntervals;
+
+block content
+	canvas(id='chart' width='400' height='400')
+	script(src='https://cdn.jsdelivr.net/npm/chart.js@2.8.0')
+	script.
+
+		var ctx = document.getElementById('chart').getContext('2d');
+		console.log(!{labels});
+		//console.log(#{data});
+		let data = !{data};
+		let labels = !{labels};
+		console.log(data);
+		for (var d in data) {
+			console.log(data[d]);
+		}
+		
+		var myChart = new Chart(ctx, {
+			type: 'line',
+			data: {
+				labels: labels,
+				datasets: data,
+				options: {
+					responsive: true,
+				}
+
+			}
+		})

@@ -1,5 +1,6 @@
 doctype html
 html
+	block vars
 	head
 		title= title
 		meta(charset='utf-8')
@@ -17,6 +18,9 @@ html
 		link(rel='stylesheet', href='/stylesheets/style.css')
 
 	body
+		script.
+			console.log('timeSeries : ');
+			console.log(timeSeries);
 		div(class='wrapper')
 			nav(id='sidebar')
 				div(class='sidebar-header')
@@ -38,8 +42,9 @@ html
 						label(for='timeSeries') Time Series:
 						select#timeSeries.form-control(type='select', placeholder='Select Time Series', name='timeSeries' required='true')
 							option(value="" selected) Select a Timeseries
-							each val, key in timeSeries
-								option(value=key) #{val}
+							if (timeSeries)
+								each val, key in timeSeries
+									option(value=key) #{val}
 						script.
 							var timeseries = document.querySelector('#timeSeries');
 							timeseries.onchange = function(){
@@ -55,8 +60,9 @@ html
 						label(for='interval') Time Interval:
 						select#timeIntervals.form-control(type='select' name='timeInterval')
 							option(value='' selected) Select a Time Interval
-							each val, key in timeIntervals
-								option(value=key) #{val}
+							if(timeIntervals)
+								each val, key in timeIntervals
+									option(value=key) #{val}
 						
 
 					button.btn.btn-primary(type='submit') Submit
@@ -68,7 +74,7 @@ html
 						button(type='button' id='sidebarCollapse' class='btn btn-info')
 							i(class='fas fa-align-left')
 							span Toggle Sidebar
-		block content
+			block content
 
 
 

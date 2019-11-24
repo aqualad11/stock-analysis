@@ -84,6 +84,7 @@ exports.getStockData = async function(stocks, timeSeries, timeInterval) {
 
 // Returns promise with response from API
 async function callAPI(url) {
+	console.log('url = ' + url);
 	return new Promise((resolve, reject) => {
 		// Make call to the alphavantage api
 		https.get(url, (resp) => {
