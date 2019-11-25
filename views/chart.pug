@@ -16,6 +16,13 @@ block content
 			//console.log(#{data});
 			let data = !{data};
 			let labels = !{labels};
+			let newLabels = [];
+			labels.forEach((l) => {
+				console.log(l);
+				newLabels.push(new Date(l));
+			});
+			console.log('new labels:');
+			console.log(newLabels);
 			console.log(data);
 			for (var d in data) {
 				console.log(data[d]);
@@ -24,7 +31,7 @@ block content
 			var myChart = new Chart(ctx, {
 				type: 'line',
 				data: {
-					labels: labels,
+					labels: newLabels,
 					datasets: data,
 					options: {
 						responsive: true,
@@ -33,13 +40,28 @@ block content
 							yAxes: [{
 								stacked: true, 
 								gridLines: {
-									display: false,
-								}
+									display: true,
+								},
+								ticks: {
+									stepSize: 10,
+								},
 							}],
 							xAxes: [{
+								type: 'time',
+								position: 'bottom',
+								time: {
+						            unit: 'day',
+						            //unitStepSize: 10
+						        },
+								/*ticks: {
+									stepSize: 10,
+									maxTicksLimit: 10,
+									autoSkip: true
+
+								},*/
 								gridLines: {
 									//display: false;
-								}
+								},
 							}]
 						},
 						legend: {
