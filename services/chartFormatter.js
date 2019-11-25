@@ -1,6 +1,8 @@
 exports.lineGraph = function(data) {
 	var stocks = Object.keys(data);
 	var labels = Object.keys(data[stocks[0]]);
+
+	labels = reverseData(labels);
 	console.log('stocks = ');
 	console.log(stocks);
 	console.log('labels = ');
@@ -16,6 +18,8 @@ exports.lineGraph = function(data) {
 		let points = Object.keys(dates).map((key) => {
 			return dates[key]['1. open'];
 		});
+
+		points = reverseData(points);
 
 		let set = {
 			label: label,
@@ -39,4 +43,13 @@ function chooseRandomColor() {
 	let color = '#';
 	color += Math.floor(Math.random() * 16777215).toString(16);
 	return color;
+}
+
+function reverseData(data) {
+	let rev = [];
+	for(var i = data.length-1; i >= 0; i--) {
+		rev.push(data[i]);
+	}
+
+	return rev;
 }

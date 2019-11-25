@@ -6,28 +6,46 @@ block vars
 	- var timeIntervals = timeIntervals;
 
 block content
-	canvas(id='chart' width='400' height='400')
-	script(src='https://cdn.jsdelivr.net/npm/chart.js@2.8.0')
-	script.
+	div(class='chart-container')
+		canvas(id='chart')
+		script(src='https://cdn.jsdelivr.net/npm/chart.js@2.8.0')
+		script.
 
-		var ctx = document.getElementById('chart').getContext('2d');
-		console.log(!{labels});
-		//console.log(#{data});
-		let data = !{data};
-		let labels = !{labels};
-		console.log(data);
-		for (var d in data) {
-			console.log(data[d]);
-		}
-		
-		var myChart = new Chart(ctx, {
-			type: 'line',
-			data: {
-				labels: labels,
-				datasets: data,
-				options: {
-					responsive: true,
-				}
-
+			var ctx = document.getElementById('chart').getContext('2d');
+			console.log(!{labels});
+			//console.log(#{data});
+			let data = !{data};
+			let labels = !{labels};
+			console.log(data);
+			for (var d in data) {
+				console.log(data[d]);
 			}
-		})
+			
+			var myChart = new Chart(ctx, {
+				type: 'line',
+				data: {
+					labels: labels,
+					datasets: data,
+					options: {
+						responsive: true,
+						maintainaspectratio: false,
+						scales: {
+							yAxes: [{
+								stacked: true, 
+								gridLines: {
+									display: false,
+								}
+							}],
+							xAxes: [{
+								gridLines: {
+									//display: false;
+								}
+							}]
+						},
+						legend: {
+							position: 'right',
+						}
+					}
+
+				}
+			});
