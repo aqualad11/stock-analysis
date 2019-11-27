@@ -5,11 +5,15 @@
 	align-items: stretch;
 }
 
-.chart-container {
-	position: relative;
-	margin: auto;
-	height: 100vh;
-	width: 100vw;
+html,body {
+	height: 100%;
+	width: 100%;
+}
+
+#myChart {
+	height: 100%;
+	width: 100%;
+	min-height: 600px;
 }
 
 #sidebar {
